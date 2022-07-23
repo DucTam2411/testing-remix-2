@@ -112,7 +112,34 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 export function CatchBoundary() {
     const caught = useCatch();
-    return <div>content</div>;
+    return (
+        <html>
+            <head>
+                <title>Oh no!</title>
+                <Meta />
+                <Links />
+            </head>
+            <body>
+                <nav className="navbar">
+                    <Link to="/" className="logo">
+                        Remix
+                    </Link>
+                    <ul className="nav">
+                        <li>
+                            <Link to="/posts">Posts </Link>
+                        </li>
+                    </ul>
+                </nav>
+                <div className="page-content container ">
+                    <div className="error-container">
+                        <h1>Error {caught.status} </h1>
+                        <p className="error">{caught.statusText}</p>
+                    </div>
+                </div>
+                <Scripts />
+            </body>
+        </html>
+    );
 }
 
 export function ErrorBoundary({ error }: { error: Error }) {
