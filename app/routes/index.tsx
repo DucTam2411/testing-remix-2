@@ -35,10 +35,10 @@ function IndexRoute() {
                 <li>
                     <ul className="dir-tree">
                         <li>
-                            <Link to="/auth/login">login or register</Link>
+                            <Link to="/auth/login">login</Link>
                         </li>
                         <li>
-                            <Link to="/profile">profile</Link>
+                            <Link to="/auth/register">register</Link>
                         </li>
 
                         <li>

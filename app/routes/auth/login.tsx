@@ -4,7 +4,7 @@ import {
     LoaderFunction,
     redirect,
 } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
+import { Link, useActionData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import {
     createUserSession,
@@ -32,7 +32,6 @@ type ActionData = {
         password?: string | undefined;
     };
     fields?: {
-        loginType?: string;
         username?: string;
         password?: string;
     };
@@ -43,18 +42,14 @@ function badRequest(data: ActionData) {
 }
 export const action: ActionFunction = async ({ request }) => {
     const form = await request.formData();
-    const loginType = form.get("loginType");
+    // const loginType = form.get("loginType");
     const username = form.get("username");
     const password = form.get("password");
 
-    if (
-        typeof username !== "string" ||
-        typeof password !== "string" ||
-        typeof loginType !== "string"
-    )
+    if (typeof username !== "string" || typeof password !== "string")
         return null;
 
-    const fields = { loginType, username, password };
+    const fields = { username, password };
     const fieldErrors = {
         username: validateUsername(username),
         password: validatePassword(password),
@@ -64,57 +59,54 @@ export const action: ActionFunction = async ({ request }) => {
         return badRequest({ fieldErrors, fields });
     }
 
-    switch (loginType) {
-        case "login": {
-            const user = await login({
-                username,
-                password,
-            });
-            if (!user) {
-                return badRequest({
-                    fields,
-                    fieldErrors: {
-                        username: " Invalid credentials",
-                    },
-                });
-            }
-
-            return createUserSession(user.id, "/posts");
-        }
-
-        case "register": {
-            const userExists = await db.user.findFirst({
-                where: {
-                    username,
-                },
-            });
-
-            if (userExists) {
-                return badRequest({
-                    fields,
-                    fieldErrors: {
-                        username: `User ${username} already exists`,
-                    },
-                });
-            }
-            const user = await register({ username, password });
-            if (!user) {
-                return badRequest({
-                    fields,
-                    formError: "Something went wrong",
-                });
-            }
-
-            // Create session
-            return createUserSession(user.id, "/posts");
-        }
-        default: {
-            return badRequest({
-                fields,
-                formError: "Login type is invalid",
-            });
-        }
+    // LOGIN
+    const user = await login({
+        username,
+        password,
+    });
+    if (!user) {
+        return badRequest({
+            fields,
+            fieldErrors: {
+                username: " Invalid credentials",
+            },
+        });
     }
+
+    return createUserSession(user.id, "/posts");
+    // case "register": {
+    //     const userExists = await db.user.findFirst({
+    //         where: {
+    //             username,
+    //         },
+    //     });
+
+    //     if (userExists) {
+    //         return badRequest({
+    //             fields,
+    //             fieldErrors: {
+    //                 username: `User ${username} already exists`,
+    //             },
+    //         });
+    //     }
+    //     const user = await register({ username, password });
+    //     if (!user) {
+    //         return badRequest({
+    //             fields,
+    //             formError: "Something went wrong",
+    //         });
+    //     }
+
+    //     // Create session
+    //     return createUserSession(user.id, "/posts");
+    // }
+    // default: {
+    //     return badRequest({
+    //         fields,
+    //         formError: "Login type is invalid",
+    //     });
+    // }
+    // }
 };
 
 const LoginRoute = () => {
@@ -127,33 +119,6 @@ const LoginRoute = () => {
 
             <div className="page-content">
                 <form method="POST">
-                    <fieldset>
-                        <legend>Login or Register</legend>
-                        <label>
-                            <input
-                                type="radio"
-                                name="loginType"
-                                value="login"
-                                defaultChecked={
-                                    !actionData?.fields?.loginType ||
-                                    actionData?.fields?.loginType === "login"
-                                }
-                            />{" "}
-                            Login
-                        </label>
-
-                        <label>
-                            <input
-                                type="radio"
-                                name="loginType"
-                                value="register"
-                                defaultChecked={
-                                    actionData?.fields?.loginType === "register"
-                                }
-                            />{" "}
-                            Register
-                        </label>
-                    </fieldset>
                     <div className="form-control">
                         <label htmlFor="username">Username</label>
                         <input
@@ -199,6 +164,12 @@ const LoginRoute = () => {
                     <button className="btn btn-block" type="submit">
                         Submit
                     </button>
+                    <Link
+                        to="/auth/register"
+                        className="btn btn-reverse btn-block"
+                    >
+                        Register
+                    </Link>
                 </form>
             </div>
         </div>

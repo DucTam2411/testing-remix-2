@@ -2,10 +2,19 @@
 import bcrypt from "bcrypt";
 import { db } from "./db.server";
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { Profile } from "@prisma/client";
 
 type LoginForm = {
     username: string;
     password: string;
+};
+
+type RegisterForm = {
+    username: string;
+    password: string;
+    phoneNumber: string;
+    email: string;
+    name: string;
 };
 
 // LOGIN USER
@@ -27,7 +36,13 @@ export async function login({ username, password }: LoginForm) {
 }
 
 // REGISTER USER
-export async function register({ username, password }: LoginForm) {
+export async function register({
+    username,
+    password,
+    email,
+    phoneNumber,
+    name,
+}: RegisterForm) {
     // find if user exist
     const user = await db.user.findUnique({
         where: {
@@ -37,12 +52,22 @@ export async function register({ username, password }: LoginForm) {
     if (user) return null;
 
     const passwordHash = await bcrypt.hash(password, 10);
-    return db.user.create({
+    const registeredUser = await db.user.create({
         data: {
             username,
             passwordHash,
         },
     });
+    await db.profile.create({
+        data: {
+            name,
+            phoneNumber,
+            email,
+            profileImageUrl: "https://picsum.photos/200",
+            userId: registeredUser.id,
+        },
+    });
+    return registeredUser;
 }
 
 // GET SESSION SECRET

@@ -84,13 +84,9 @@ function Layout({ children }: { children: React.ReactNode }) {
                         <Link to="/posts">Posts</Link>
                     </li>
 
-                    {user ? (
+                    {user && (
                         <li>
                             <Link to="/profile">Profile</Link>
-                        </li>
-                    ) : (
-                        <li>
-                            <Link to="/auth/login"> Login</Link>
                         </li>
                     )}
 
