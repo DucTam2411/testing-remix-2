@@ -290,6 +290,16 @@ input[type="radio"]:checked:after {
     position: absolute;
 }
 
+.profile-link {
+    float: right;
+    padding: 10px;
+    font-weight: bold;
+}
+.profile-link:hover {
+    background-color: black;
+    color: white;
+}
+
 @media screen and (max-width: 400px) {
     .profile-content {
         position: relative;

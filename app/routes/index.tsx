@@ -20,7 +20,7 @@ function IndexRoute() {
                 <li>
                     <ul className="dir-tree">
                         <li>
-                            <Link prefetch="intent" to="/profile">
+                            <Link prefetch="intent" to="/profile/edit">
                                 modify your profile
                             </Link>
                         </li>

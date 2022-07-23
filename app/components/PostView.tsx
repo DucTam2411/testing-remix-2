@@ -1,3 +1,4 @@
+import type { Post, User } from "@prisma/client";
 import { Form, Link } from "@remix-run/react";
 
 const PostView = ({
@@ -5,8 +6,8 @@ const PostView = ({
     user,
     disable = false,
 }: {
-    post: any;
-    user?: any;
+    post: Post;
+    user?: User;
     disable?: boolean;
 }) => {
     const style = disable ? { opacity: "0.3" } : {};
