@@ -18,6 +18,8 @@ import {
 import React from "react";
 
 import globalStyleUrl from "~/styles/global.css";
+import skeletonStyleUrl from "~/styles/skeletion.css";
+
 import { getUser } from "./utils/session.server";
 
 export const meta: MetaFunction = () => ({
@@ -51,6 +53,10 @@ export default function App() {
 
 export const links: LinksFunction = () => {
     return [
+        {
+            rel: "stylesheet",
+            href: skeletonStyleUrl,
+        },
         {
             rel: "stylesheet",
             href: globalStyleUrl,

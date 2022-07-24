@@ -26,7 +26,7 @@ model Profile {
   name            String
   email           String
   phoneNumber     String
-  userId          String
+  userId          String @unique
   user            User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

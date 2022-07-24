@@ -30,6 +30,14 @@ function IndexRoute() {
                                 profile
                             </Link>
                         </li>
+                        <li>
+                            <Link
+                                prefetch="intent"
+                                to="/profile/98ad2ce7-7889-4196-a457-fb5e0656dc7c"
+                            >
+                                people profile
+                            </Link>
+                        </li>
                     </ul>
                 </li>
                 <li>
